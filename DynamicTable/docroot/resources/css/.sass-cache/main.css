@@ -1,0 +1,86 @@
+.ui-datatable .ui-column-filter {
+  display: block;
+  width: 80px!important;
+  margin: auto; }
+
+.ui-button-text-only .ui-button-text {
+  padding: .3em 0.5em!important; }
+
+.W {
+  background-color: white;
+  text-align: center;
+  font-weight: bold; }
+
+.Y {
+  background-color: #4e8fff;
+  text-align: center;
+  font-weight: bold; }
+
+.R {
+  background-color: red;
+  text-align: center;
+  font-weight: bold; }
+
+.O {
+  background-color: #F70;
+  text-align: center;
+  font-weight: bold; }
+
+.G {
+  background-color: #CCCCCC;
+  text-align: center;
+  font-weight: bold; }
+
+.Z {
+  background-color: blue;
+  text-align: center;
+  font-weight: bold; }
+
+.right {
+  text-align: right; }
+
+.center {
+  text-align: center; }
+
+.rightbold {
+  text-align: right;
+  font-weight: bold;
+  color: #000099; }
+
+.Red {
+  color: red;
+  font-weight: bold; }
+
+.White {
+  color: #000000;
+  font-weight: bold; }
+
+.Orange {
+  color: orange;
+  font-weight: bold; }
+
+.Yellow {
+  color: yellow;
+  font-weight: bold; }
+
+.companyHeaderGrid tr, .companyHeaderGrid td {
+  border: none !important; }
+
+.rotate {
+  -webkit-animation: spin 5s infinite linear;
+  animation: spin 5s infinite linear; }
+
+@-webkit-keyframes spin {
+  100% {
+    -webkit-transform: rotateY(360deg); } }
+
+@-moz-keyframes spin {
+  100% {
+    -moz-transform: rotateY(360deg); } }
+
+@keyframes spin {
+  100% {
+    -moz-transform: rotateY(360deg);
+    -o-transform: rotateY(360deg);
+    transform: rotateY(360deg); } }
+

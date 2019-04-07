@@ -1,0 +1,132 @@
+<?xml version="1.0"?>
+
+<portlet-app xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd" version="2.0"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd">
+    <portlet>
+        <portlet-name>DynamicTable</portlet-name>
+        <display-name>DynamicTable</display-name>
+        <portlet-class>javax.portlet.faces.GenericFacesPortlet</portlet-class>
+        <init-param>
+            <name>javax.portlet.faces.defaultViewId.view</name>
+            <value>/views/portletViewMode.xhtml</value>
+        </init-param>
+        <init-param>
+            <name>javax.portlet.faces.defaultViewId.edit</name>
+            <value>/views/portletEditMode.xhtml</value>
+        </init-param>
+        <init-param>
+            <name>javax.portlet.faces.defaultViewId.help</name>
+            <value>/views/portletHelpMode.xhtml</value>
+        </init-param>
+        <supports>
+            <mime-type>text/html</mime-type>
+            <portlet-mode>view</portlet-mode>
+            <portlet-mode>edit</portlet-mode>
+            <portlet-mode>help</portlet-mode>
+        </supports>
+        <portlet-info>
+            <title>DynamicTable</title>
+            <short-title>DynamicTable</short-title>
+            <keywords>DynamicTable</keywords>
+        </portlet-info>
+        <portlet-preferences>
+            <preference>
+                <name>datePattern</name>
+                <value>MM/dd/yyyy</value>
+            </preference>
+            <preference>
+                <name>recipientEmailAddress</name>
+                <value>humanresources@some-company-domain.com</value>
+            </preference>
+            <preference>
+                <name>queryFC</name>
+                <value> select top 1
+                    episodedatetime,
+                    case when datediff(minute,episodedatetime,getdate())>10 then 'R' else 'W' end time_flag,
+                    noFC44,rsptimefc44/1000 as rtFC44 ,queueFC44,
+                    dbo.f_FlagCreatorIIFMS( 'BMI','fc44','R',rsptimefc44) rtFC44_flag,dbo.f_FlagCreatorIIFMS( 'BMI','fc44','Q',queueFC44) queueFC44_flag,
+
+                    noFC45,rsptimefc45/1000 as rtFC45,queueFC45,
+                    dbo.f_FlagCreatorIIFMS( 'BMI','fc45','R',rsptimefc45) rtFC45_flag,dbo.f_FlagCreatorIIFMS( 'BMI','fc45','Q',queueFC45) queueFC45_flag
+
+                    from BMI_onlinestatus
+                    --where convert(char(10),episodedatetime,121) = convert(char(10),GETDATE(),121)
+                    order by episodedatetime desc
+
+
+                </value>
+            </preference>
+            <preference>
+                <name>queryCart</name>
+                <value> select top 1
+                    episodedatetime,
+                    case when datediff(minute,episodedatetime,getdate())>10 then 'R' else 'W' end time_flag,
+                    noCard200,rsptimeCard200/1000 as Card200rt ,queueCard200,
+                    dbo.f_FlagCreatorIIFMS( 'BMI','Card200','R',rsptimeCard200) rtCard200_flag,dbo.f_FlagCreatorIIFMS( 'BMI','card200','Q',queueCard200) queueCard200_flag,
+
+                    noCard100,rsptimeCard100/1000 as Card100rt ,queueCard100,
+                    dbo.f_FlagCreatorIIFMS( 'BMI','Card100','R',rsptimeCard100) rtCard100_flag,dbo.f_FlagCreatorIIFMS( 'BMI','card100','Q',queueCard100) queueCard100_flag,
+
+                    noCard400,rsptimeCard400/1000 as Card400rt ,queueCard400,
+                    dbo.f_FlagCreatorIIFMS( 'BMI','Card400','R',rsptimeCard400) rtCard400_flag,dbo.f_FlagCreatorIIFMS( 'BMI','card400','Q',queueCard400) queueCard400_flag,
+
+                    noCard420,rsptimeCard420/1000 as Card420rt ,queueCard420,
+                    dbo.f_FlagCreatorIIFMS( 'BMI','Card420','R',rsptimeCard420) rtCard420_flag,dbo.f_FlagCreatorIIFMS( 'BMI','card420','Q',queueCard420) queueCard420_flag
+
+                    from BMI_Card_onlinestatus
+                    --where convert(char(10),episodedatetime,121) = convert(char(10),GETDATE(),121)
+                    order by episodedatetime desc
+
+                </value>
+            </preference>
+            <preference>
+                <name>chartTitle</name>
+                <value>chartTitle</value>
+            </preference>
+
+            <preference>
+                <name>chartFieldsDescription</name>
+                <value>chartFieldsDescription</value>
+            </preference>
+            <preference>
+                <name>chartRangeSelector</name>
+                <value>true</value>
+            </preference>
+            <preference>
+                <name>chartInputEnabled</name>
+                <value>true</value>
+            </preference>
+            <preference>
+                <name>chartNavigator</name>
+                <value>true</value>
+            </preference>
+            <preference>
+                <name>chartExporting</name>
+                <value>true</value>
+            </preference>
+            <preference>
+                <name>chartLegend</name>
+                <value>true</value>
+            </preference>
+            <preference>
+                <name>chartUseUTC</name>
+                <value>false</value>
+            </preference>
+
+
+        </portlet-preferences>
+        <security-role-ref>
+            <role-name>administrator</role-name>
+        </security-role-ref>
+        <security-role-ref>
+            <role-name>guest</role-name>
+        </security-role-ref>
+        <security-role-ref>
+            <role-name>power-user</role-name>
+        </security-role-ref>
+        <security-role-ref>
+            <role-name>user</role-name>
+        </security-role-ref>
+    </portlet>
+</portlet-app>

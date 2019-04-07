@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <h:form id="#{dataTableView.namespace}form1">
+
+        <h:panelGrid id="#{dataTableView.namespace}p1" columns="1" columnClasses="panelGridColumnRight">
+            <h:panelGroup>
+                <p:outputPanel id="#{dataTableView.namespace}p2">
+
+                    <h:panelGrid columns="1">
+                        <h:outputLabel value="uniqueID"/>
+                        <p:inputTextarea value="#{setting.uniqueID}" cols="200" rows="1" autoResize="true"/>
+
+                        <h:outputLabel value="title|Query with only one value as a result "/>
+                        <p:inputTextarea id="#{dataTableView.namespace}title" value="#{setting.title}" cols="200"
+                                         rows="1" autoResize="true"/>
+
+                        <h:outputLabel value="DataModel(Normal,LazyLoad)"/>
+                        <p:inputTextarea id="#{dataTableView.namespace}dataModel" value="#{setting.dataModel}"
+                                         cols="200" rows="1" autoResize="true"/>
+
+
+                        <h:outputLabel value="DataBase(sql,db2)"/>
+                        <p:inputTextarea id="#{dataTableView.namespace}dataBaseType" value="#{setting.dataBaseType}"
+                                         cols="200" rows="1" autoResize="true"/>
+
+                        <h:outputLabel value="Properties Path:"/>
+                        <p:inputTextarea id="#{dataTableView.namespace}propertiesPath" value="#{setting.propertiesPath}"
+                                         cols="200" rows="1" autoResize="true"/>
+                        <h:outputLabel value="Properties Path (Back):"/>
+                        <p:inputTextarea id="#{dataTableView.namespace}propertiesPathBack"
+                                         value="#{setting.propertiesPathBack}" cols="200" rows="1" autoResize="true"/>
+
+                        <h:outputLabel
+                                value="Query can contains: '###' '@ShToday' '@ShYesterday' '@shFirstDayOfCurrentMonth' '@ShFirstDayOfCurrentYear'"/>
+                        <p:inputTextarea id="#{dataTableView.namespace}query" rows="2" cols="200" autoResize="true"
+                                         value="#{setting.query}"/>
+
+                        <h:outputLabel value="Date"/>
+                        <h:selectOneMenu value="#{setting.dateType}">
+                            <f:selectItem itemValue="ToDay"/>
+                            <f:selectItem itemValue="YesterDay"/>
+                        </h:selectOneMenu>
+
+                        <h:outputLabel value="Enable Pause : "/>
+                        <h:selectOneMenu value="#{setting.pausedEnabled}">
+                            <f:selectItem itemValue="True"/>
+                            <f:selectItem itemValue="False"/>
+                        </h:selectOneMenu>
+
+                        <h:panelGrid columns="2">
+                            <h:outputText value="date as input:"/>
+                            <p:selectBooleanCheckbox value="#{setting.dateInputChecked}"/>
+
+                            <h:outputText value="convert date to miladi:"/>
+                            <p:selectBooleanCheckbox value="#{setting.dateConvertChecked}"/>
+
+                            <h:outputLabel value="Show Export Button : "/>
+                            <p:selectBooleanCheckbox value="#{setting.showExportButton}"/>
+                        </h:panelGrid>
+                        <p:remoteCommand name="rc" update="@widgetVar(#{dataTableView.namespace}columnsProperties)"
+                                         actionListener="#{setting.getMetaData}"/>
+                        <p:commandButton type="button" onclick="rc()" value="دریافت لیست ستون ها"
+                                         icon="ui-icon-refresh"/>
+                        <p:spacer width="20" height="10"/>
+
+                        <h:outputLabel
+                                value="Column:Type:Header:(visible=true,hidden=false):(filterable=true,withoutFilter=false)   Ordered left to right"/>
+                        <p:inputTextarea id="#{dataTableView.namespace}columnsProperties"
+                                         widgetVar="#{dataTableView.namespace}columnsProperties" cols="200"
+                                         autoResize="true"
+                                         value="#{setting.columnsProperties}"/>
+                        <h:panelGrid columns="2">
+                            <h:outputText value="Show Configpanel:"/>
+                            <p:selectBooleanCheckbox value="#{setting.showConfigPanel}"/>
+                            <h:outputText value="ConnectionPool:"/>
+                            <p:selectBooleanCheckbox value="#{setting.useConnectionPoolChecked}"/>
+                        </h:panelGrid>
+                        <h:panelGrid columns="4">
+                            <h:outputText value="Has Interval:"/>
+                            <p:selectBooleanCheckbox value="#{setting.hasInterval}"/>
+                            <h:outputLabel value="interval: "/>
+                            <h:inputText value="#{setting.interval}"/>
+                        </h:panelGrid>
+
+
+                        <h:panelGrid columns="4">
+                            <h:outputText value="انتخاب ستونها"/>
+                            <p:selectBooleanCheckbox id="#{dataTableView.namespace}columTogglerCheckbox" value="#{setting.showColumnToggler}">
+                                <p:ajax update="#{dataTableView.namespace}headerProperties"></p:ajax>
+                            </p:selectBooleanCheckbox>
+                        </h:panelGrid>
+
+
+                        <h:panelGrid columns="2">
+                            <h:outputText value="RowExpansion"/>
+                            <p:selectBooleanCheckbox value="#{setting.showRowToggler}"/>
+                        </h:panelGrid>
+
+
+
+                            <h:outputLabel
+                                    value="Header Properties: TextHeader1:colspan1;TextHeader2:colspan2" />
+                            <p:inputTextarea id="#{dataTableView.namespace}headerProperties"
+                                             widgetVar="#{dataTableView.namespace}headerProperties" cols="100"
+                                             autoResize="true"
+                                             value="#{setting.headerProperties}"
+                                             disabled="#{setting.showColumnToggler}"/>
+
+
+                    </h:panelGrid>
+
+                    <p:commandButton id="#{dataTableView.namespace}save" value="Save"
+                                     actionListener="#{setting.saveSetting}"/>
+                </p:outputPanel>
+            </h:panelGroup>
+        </h:panelGrid>
+
+    </h:form>
+
+
+
+</ui:composition>
+

@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<f:view xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:aui="http://liferay.com/faces/aui"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:mkyong="http://mkyong.com/facelets" xmlns:c="http://java.sun.com/jsp/jstl/core"
+        >
+    <h:head>
+
+        <h:outputStylesheet name="main.css" library="css"/>
+        <h:outputStylesheet name="sepam.css" library="css"/>
+        <h:outputScript name="js/Calendar/calendar.js"/>
+        <h:outputScript name="js/Calendar/calendar-fa.js"/>
+        <h:outputStylesheet name="js/Calendar/calendar-win2k-cold-2.css"/>
+
+    </h:head>
+    <h:body styleClass="jsf2-portlet ltr">
+        <h:panelGroup id="bodyChildPanel">
+            <h:form id="#{dataTableView.namespace}tableForm">
+                <p:remoteCommand actionListener="#{dataTableView.updateData}"
+                                 name="#{dataTableView.namespace}queryInterval"
+                                 update="#{dataTableView.namespace}tableForm"/>
+
+                <h:panelGrid columns="3" cellpadding="10">
+                    <p:themeSwitcher rendered="#{setting.showConfigPanel}" id="#{dataTableView.namespace}advanced"
+                                     style="width:165px" effect="fade" value="#{dataTableView.theme}" var="t">
+                        <f:selectItem itemLabel="Choose Theme" itemValue=""/>
+                        <f:selectItems value="#{dataTableView.themes}" var="theme" itemLabel="#{theme.displayName}"
+                                       itemValue="#{theme}"/>
+
+                        <p:column>
+                            <h:outputText styleClass="ui-theme ui-theme-#{t.name}" style="display:block"/>
+                        </p:column>
+
+                        <p:column>
+                            #{t.displayName}
+                        </p:column>
+                        <p:ajax event="change" listener="#{dataTableView.changeTheme}" update="@all"/>
+                    </p:themeSwitcher>
+
+
+                    <p:commandLink action="#{dataTableView.saveConfig}" rendered="#{setting.showConfigPanel}"
+                                   update="@widgetVar(#{dataTableView.namespace}userTable),#{dataTableView.namespace}growl1">
+                        <h:graphicImage id="#{dataTableView.namespace}saveConfig"
+                                        value="/resources/images/userSaveConfigIcon.png"/>
+                        <p:tooltip for="#{dataTableView.namespace}saveConfig" value="ذخیره تنظیمات کاربر"/>
+                        <p:growl id="#{dataTableView.namespace}growl1" showDetail="true" sticky="false"/>
+
+                    </p:commandLink>
+
+                    <p:commandLink action="#{dataTableView.restoreConfig(true)}" update="@all"
+                                   rendered="#{setting.showConfigPanel}">
+                        <h:graphicImage id="#{dataTableView.namespace}restoreConfig"
+                                        value="/resources/images/userRestoreConfigIcon.png"/>
+                        <p:tooltip for="#{dataTableView.namespace}restoreConfig" value="بازیابی تنظیمات کاربر"/>
+                        <p:growl id="#{dataTableView.namespace}growl2" showDetail="true" sticky="false"/>
+                    </p:commandLink>
+                </h:panelGrid>
+
+                <p:panel id="p2" rendered="#{setting.dateInputChecked}">
+                    <div id="#{dataTableView.namespace}container2">
+                        <p:inputText id="querydate" style="width:80px; align-items: flex-start"
+                                     onmousedown="showCalendar(this.id,false);"
+                                     value="#{dataTableView.persianDate}"
+
+                        />
+                        <p:commandLink rendered="#{dataTableView.normalShow}"
+                                       onclick="PF('#{dataTableView.namespace}DataTableNormal').clearFilters()"
+                                       action="#{dataTableView.updateData}"
+                                       update="#{dataTableView.namespace}tableForm"
+                        >
+                            <h:graphicImage style="width: 15px;"
+                                            value="/resources/images/Button-Refresh-icon.png"/>
+
+                        </p:commandLink>
+
+
+                        <p:commandLink rendered="#{dataTableView.lazyLoadShow}"
+                                       onclick="PF('#{dataTableView.namespace}DataTableLazyLoad').clearFilters()"
+                                       action="#{dataTableView.updateData}"
+                                       update="#{dataTableView.namespace}tableForm">
+                            <h:graphicImage style="width: 15px;"
+                                            value="/resources/images/Button-Refresh-icon.png"/>
+
+                        </p:commandLink>
+                        <p:commandLink rendered="#{(dataTableView.pausedEnabled) &amp;&amp; (dataTableView.normalShow)}"
+                                       onclick="PF('#{dataTableView.namespace}DataTableNormal').clearFilters()"
+                                       oncomplete="PF('#{dataTableView.namespace}DataTableNormal').filter()"
+                                       update="#{dataTableView.namespace}tableForm"
+                                       action="#{dataTableView.pausedListener}"
+                        >
+                            <h:graphicImage value="/resources/images/playT.png"/>
+
+                        </p:commandLink>
+
+
+                        <p:commandLink rendered="#{(dataTableView.playEnabled)&amp;&amp; (dataTableView.normalShow)}"
+                                       onclick="PF('#{dataTableView.namespace}DataTableNormal').clearFilters()"
+                                       oncomplete="PF('#{dataTableView.namespace}DataTableNormal').filter()"
+                                       update="#{dataTableView.namespace}tableForm"
+                                       action="#{dataTableView.playListener}"
+                        >
+                            <h:graphicImage value="/resources/images/pauseT.png"/>
+
+                        </p:commandLink>
+                        <p:commandLink
+                                rendered="#{(dataTableView.pausedEnabled) &amp;&amp; (dataTableView.lazyLoadShow)}"
+                                onclick="PF('#{dataTableView.namespace}DataTableLazyLoad').clearFilters()"
+                                update="#{dataTableView.namespace}tableForm"
+                                action="#{dataTableView.pausedListener}"
+                        >
+                            <h:graphicImage value="/resources/images/playT.png"/>
+
+                        </p:commandLink>
+
+
+                        <p:commandLink rendered="#{(dataTableView.playEnabled) &amp;&amp; (dataTableView.lazyLoadShow)}"
+                                       onclick="PF('#{dataTableView.namespace}DataTableLazyLoad').clearFilters()"
+                                       update="#{dataTableView.namespace}tableForm"
+                                       action="#{dataTableView.playListener}"
+                        >
+                            <h:graphicImage value="/resources/images/pauseT.png"/>
+
+                        </p:commandLink>
+                        <p:commandLink rendered="#{dataTableView.lazyLoadShow}"
+                                       onclick="PF('#{dataTableView.namespace}DataTableLazyLoad').clearFilters()"
+                                       update="#{dataTableView.namespace}DataTableLazyLoad">
+                            <h:graphicImage style="float:right;width: 15px;"
+                                            value="/resources/images/eraser.png"/>
+
+                        </p:commandLink>
+                    </div>
+
+                </p:panel>
+
+
+                <p:dataTable rendered="false" id="#{dataTableView.namespace}userTable"
+                             widgetVar="#{dataTableView.namespace}userTable" value="#{dataTableView.userAttributes}"
+                             var="att"
+                             paginator="true"
+                             rowsPerPageTemplate="5,10,20,30"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             currentPageReportTemplate="تعداد کل رکوردها: {totalRecords}, صفحه  {currentPage} از  {totalPages}"
+                             paginatorAlwaysvisible="false">
+                    <p:column>
+                        <h:outputText value="#{att}"/>
+
+                    </p:column>
+                    user.getExpandoBridge().getAttributes()
+                    <p:column>
+                        <h:outputText value="#{dataTableView.user.expandoBridge.getAttribute(att)}"/>
+
+                    </p:column>
+                </p:dataTable>
+
+
+                <h:outputText value=" "/>
+
+
+                <p:dataTable rendered="#{dataTableView.normalShow}" id="#{dataTableView.namespace}DataTableNormal"
+                             widgetVar="#{dataTableView.namespace}DataTableNormal"
+                             value="#{dataTableView.dataTableRows}" var="tableRow" rows="#{dataTableView.userPageSize}"
+                             emptyMessage="هیچ رکوردی پیدا نشد."
+                             paginator="true"
+                             rowsPerPageTemplate="5,10,20,30"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             currentPageReportTemplate="تعداد کل رکوردها: {totalRecords}, صفحه  {currentPage} از  {totalPages}"
+                             paginatorAlwaysvisible="true"
+                             draggableColumns="true"
+                             sortMode="multiple"
+                             filterEvent="enter"
+                             resizeMode="expand"
+                             columnIndexVar="colIndex"
+                >
+
+                    <!--   Data -->
+                    <f:facet name="header">
+                        <p:commandLink rendered="#{dataTableView.normalShow}"
+                                       onclick="PF('#{dataTableView.namespace}DataTableNormal').clearFilters()"
+                                       action="#{dataTableView.updateData}"
+                                       update="#{dataTableView.namespace}DataTableNormal">
+                            <h:graphicImage style="float:right;width: 15px;"
+                                            value="/resources/images/eraser.png"/>
+
+                        </p:commandLink>
+
+                        <h:outputText value="#{dataTableView.title}"/>
+                        <p:commandButton rendered="#{setting.showColumnToggler}"
+                                         id="#{dataTableView.namespace}colToggler" type="button" value="انتخاب ستون ها"
+                                         icon="ui-icon-calculator"/>
+                        <p:columnToggler datasource="#{dataTableView.namespace}DataTableNormal"
+                                         widgetVar="colTogglerWidgetVar"
+                                         trigger="#{dataTableView.namespace}colToggler">
+                            <p:ajax event="toggle" listener="#{dataTableView.dataTableOnToggle}"
+                                    onstart="PF('colTogglerWidgetVar').hide();"/>
+                        </p:columnToggler>
+
+                    </f:facet>
+                    <p:column rendered="#{setting.showRowToggler}" exportable="false"
+                              id="#{dataTableView.namespace}rowToggler" toggleable="false"
+                              style="width:16px">
+                        <p:rowToggler/>
+                    </p:column>
+
+
+                    <p:columns value="#{dataTableView.dataTableColumnsInExpansion}" var="column"
+                               columnIndexVar="colIndex" sortBy="#{tableRow.hs[column.property]}"
+                               filterable="#{column.filterable}" filterMatchMode="contains"
+                               filterBy="#{tableRow.hs[column.property]}"
+                               visible="#{dataTableView.columnShowList[colIndex]}"
+                               exportable="#{dataTableView.columnShowList[colIndex]}">
+                        <f:facet name="header">
+                            <h:outputText value="#{column.header}"/>
+                        </f:facet>
+                        <h:outputText id="#{dataTableView.namespace}x" value="#{tableRow.hs[column.property]}"
+                        >
+                            <f:convertNumber pattern="###,###"/>
+                        </h:outputText>
+                        <p:tooltip rendered="#{dataTableView.tooltipShow}" id="#{dataTableView.namespace}toolTipFade"
+                                   for="#{dataTableView.namespace}x" value="#{tableRow.hs[column.property]}"/>
+                    </p:columns>
+                    <p:rowExpansion>
+                        <p:dataTable id="#{dataTableView.namespace}display3"
+                                     value="#{dataTableView.dataTableColumnsInExpansion}" var="column">
+
+
+                            <p:column style="width: 20%">
+                                <h:outputText value="#{column.header}" />
+                            </p:column>
+                            <p:column style="width: 80%">
+                                <h:outputText value="#{tableRow.hs[column.property]}" />
+                            </p:column>
+
+                        </p:dataTable>
+
+                    </p:rowExpansion>
+
+
+                </p:dataTable>
+
+                <p:dataTable rendered="#{dataTableView.lazyLoadShow}" var="tableRow" value="#{dataTableView.lazyModel}"
+                             paginator="true" rows="10"
+                             rowsPerPageTemplate="5,10,20,30"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             currentPageReportTemplate="تعداد کل رکوردها: {totalRecords}, صفحه  {currentPage} از  {totalPages}"
+                             id="#{dataTableView.namespace}DataTableLazyLoad"
+                             widgetVar="#{dataTableView.namespace}DataTableLazyLoad"
+                             lazy="true"
+                             filterEvent="enter"
+                >
+
+                    <f:facet name="header">
+                        <h:outputText value="#{dataTableView.title}"/>
+                        <p:commandButton rendered="#{setting.showColumnToggler}"
+                                         id="#{dataTableView.namespace}colToggler" type="button" value="انتخاب ستون ها"
+                                         icon="ui-icon-calculator"/>
+                        <p:columnToggler datasource="#{dataTableView.namespace}DataTableLazyLoad"
+                                         trigger="#{dataTableView.namespace}colToggler">
+                            <p:ajax event="toggle" listener="#{dataTableView.dataTableOnToggle}"/>
+                        </p:columnToggler>
+
+                    </f:facet>
+                    <p:column rendered="#{setting.showRowToggler}" id="#{dataTableView.namespace}rowToggler"    exportable="false"
+                              toggleable="false"
+                              style="width:16px">
+                        <p:rowToggler/>
+
+                    </p:column>
+                    <p:columns value="#{dataTableView.dataTableColumnsInExpansion}" var="column"
+                               columnIndexVar="colIndex" sortBy="#{column.property}" filterable="#{column.filterable}"
+                               filterMatchMode="contains" filterBy="#{column.property}"
+                               visible="#{dataTableView.columnShowList[colIndex]}"
+                               exportable="#{dataTableView.columnShowList[colIndex]}">
+                        <f:facet name="header">
+                            <h:outputText value="#{column.header}"/>
+                        </f:facet>
+                        <h:outputText id="#{dataTableView.namespace}x" value="#{tableRow.hs[column.property]}"
+                        >
+                            <f:convertNumber pattern="###,###"/>
+                        </h:outputText>
+                        <p:tooltip rendered="#{dataTableView.tooltipShow}" id="#{dataTableView.namespace}toolTipFade"
+                                   for="#{dataTableView.namespace}x" value="#{tableRow.hs[column.property]}"/>
+                    </p:columns>
+                    <p:rowExpansion>
+                        <p:dataTable id="#{dataTableView.namespace}display3"
+                                     value="#{dataTableView.dataTableColumnsInExpansion}" var="column">
+                            <p:column style="width: 20%">
+                                <h:outputText value="#{column.header}" />
+                            </p:column>
+                            <p:column style="width: 80%" >
+                                <h:outputText value="#{tableRow.hs[column.property]} " />
+                            </p:column>
+
+                        </p:dataTable>
+
+                    </p:rowExpansion>
+
+                </p:dataTable>
+
+                <p:poll interval="#{dataTableView.interval}" rendered="#{setting.hasInterval}"
+                        oncomplete="#{dataTableView.namespace}queryInterval();"/>
+            </h:form>
+            <h:form rendered="#{(setting.showExportButton) and (dataTableView.normalShow)}"
+                    id="#{dataTableView.namespace}exportForm">
+
+                <h:commandLink>
+                    <p:graphicImage width="30" height="30" value="/resources/images/excel.png"/>
+                    <p:dataExporter type="xls" postProcessor="#{dataTableView.postProcessXLS}"
+                                    target=":#{dataTableView.namespace}tableForm:#{dataTableView.namespace}DataTableNormal"
+                                    fileName="DataTable" preProcessor="#{dataTableView.preProcessXLS}"/>
+
+
+                </h:commandLink>
+                <h:commandLink>
+
+                    <p:graphicImage width="30" height="30" value="/resources/images/printer.png"/>
+                    <p:printer target=":#{dataTableView.namespace}tableForm:#{dataTableView.namespace}DataTableNormal"/>
+                </h:commandLink>
+                <h:commandLink>
+                    <p:graphicImage width="30" height="30" value="/resources/images/pdficon.png"/>
+                    <mkyong:dataExporter2 preProcessor="#{dataTableView.preProcessPDF}" encoding="windows-1256"
+                                          type="pdf"
+                                          target=":#{dataTableView.namespace}tableForm:#{dataTableView.namespace}DataTableNormal"
+                                          fileName="#{setting.title1}"/>
+                </h:commandLink>
+
+
+            </h:form>
+            <h:form rendered="#{(setting.showExportButton) and (dataTableView.lazyLoadShow)}"
+                    id="#{dataTableView.namespace}exportFormLazyLoad">
+
+                <h:commandLink>
+                    <p:graphicImage width="30" height="30" value="/resources/images/excel.png"/>
+                    <p:dataExporter type="xls" postProcessor="#{dataTableView.postProcessXLS}"
+                                    target=":#{dataTableView.namespace}tableForm:#{dataTableView.namespace}DataTableLazyLoad"
+                                    fileName="DataTable" preProcessor="#{dataTableView.preProcessXLS}"/>
+
+
+                </h:commandLink>
+                <h:commandLink>
+
+                    <p:graphicImage width="30" height="30" value="/resources/images/printer.png"/>
+                    <p:printer
+                            target=":#{dataTableView.namespace}tableForm:#{dataTableView.namespace}DataTableLazyLoad"/>
+                </h:commandLink>
+                <h:commandLink>
+                    <p:graphicImage width="30" height="30" value="/resources/images/pdficon.png"/>
+                    <mkyong:dataExporter2 preProcessor="#{dataTableView.preProcessPDF}" encoding="windows-1256"
+                                          type="pdf"
+                                          target=":#{dataTableView.namespace}tableForm:#{dataTableView.namespace}DataTableLazyLoad"
+                                          fileName="#{setting.title1}"/>
+                </h:commandLink>
+
+
+            </h:form>
+        </h:panelGroup>
+
+    </h:body>
+
+</f:view>
